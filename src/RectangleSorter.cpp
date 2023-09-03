@@ -41,7 +41,7 @@ void RectangleSorter::Merge(std::vector<RectangleDrawing*> rectangles, int start
 			*rectangles[k] = leftRects[i];
 			lastColor = rectangles[start + i]->color;
 			rectangles[start + i]->Recolor(wxBROWSER_COLOR);
-			wxYield();
+			wxYield(); // clears/updates the DC buffer, without this, changes in rectangle's color, height or position would not be visible
 			wxMilliSleep(SORT_DELAY);
 			rectangles[start + i]->Recolor(lastColor);
 			rectangles[k]->Redraw(leftRects[i].position, leftRects[i].size, leftRects[i].height, leftRects[i].color);
@@ -53,7 +53,7 @@ void RectangleSorter::Merge(std::vector<RectangleDrawing*> rectangles, int start
 			*rectangles[k] = rightRects[j];
 			lastColor = rectangles[mid + 1 + j]->color;
 			rectangles[mid + 1 + j]->Recolor(wxBROWSER_COLOR);
-			wxYield();
+			wxYield(); // clears/updates the DC buffer, without this, changes in rectangle's color, height or position would not be visible
 			wxMilliSleep(SORT_DELAY);
 			rectangles[mid + 1 + j]->Recolor(lastColor);
 			rectangles[k]->Redraw(rightRects[j].position, rightRects[j].size, rightRects[j].height, rightRects[j].color);
@@ -69,7 +69,7 @@ void RectangleSorter::Merge(std::vector<RectangleDrawing*> rectangles, int start
 		arrayAccesses += 2;
 		*rectangles[k] = leftRects[i];
 		rectangles[k]->Recolor(wxBROWSER_COLOR);
-		wxYield();
+		wxYield(); // clears/updates the DC buffer, without this, changes in rectangle's color, height or position would not be visible
 		wxMilliSleep(SORT_DELAY);
 		rectangles[k]->Redraw(leftRects[i].position, leftRects[i].size, leftRects[i].height, leftRects[i].color);
 		++i;
@@ -81,14 +81,14 @@ void RectangleSorter::Merge(std::vector<RectangleDrawing*> rectangles, int start
 		arrayAccesses += 2;
 		*rectangles[k] = rightRects[j];
 		rectangles[k]->Recolor(wxBROWSER_COLOR);
-		wxYield();
+		wxYield(); // clears/updates the DC buffer, without this, changes in rectangle's color, height or position would not be visible
 		wxMilliSleep(SORT_DELAY);
 		rectangles[k]->Redraw(rightRects[j].position, rightRects[j].size, rightRects[j].height, rightRects[j].color);
 		++j;
 		++k;
 	}
 
-	wxYield();
+	wxYield(); // clears/updates the DC buffer, without this, changes in rectangle's color, height or position would not be visible
 	delete[] leftRects;
 	delete[] rightRects;
 }
@@ -103,13 +103,13 @@ int RectangleSorter::Partition(std::vector<RectangleDrawing*> rectangles, int st
 
 	lastColor = rectangles[end]->color;
 	rectangles[end]->Recolor(wxBROWSER_COLOR);
-	wxYield();
+	wxYield(); // clears/updates the DC buffer, without this, changes in rectangle's color, height or position would not be visible
 
 	for (int u{ start }; u < end; ++u)
 	{
 		currentColor = rectangles[u]->color;
 		rectangles[u]->Recolor(wxBROWSER_COLOR);
-		wxYield();
+		wxYield(); // clears/updates the DC buffer, without this, changes in rectangle's color, height or position would not be visible
 		wxMilliSleep(SORT_DELAY);
 
 		++comparisons;
@@ -123,7 +123,7 @@ int RectangleSorter::Partition(std::vector<RectangleDrawing*> rectangles, int st
 			if (l != u)
 				currentColor = rectangles[u]->color;
 			arrayAccesses += 4;
-			wxYield();
+			wxYield(); // clears/updates the DC buffer, without this, changes in rectangle's color, height or position would not be visible
 
 			++l;
 		}
@@ -137,14 +137,14 @@ int RectangleSorter::Partition(std::vector<RectangleDrawing*> rectangles, int st
 	if (l != end)
 		rectangles[end]->Redraw(rectTemp.position, rectTemp.size, rectTemp.height, rectTemp.color);
 	arrayAccesses += 4;
-	wxYield();
+	wxYield(); // clears/updates the DC buffer, without this, changes in rectangle's color, height or position would not be visible
 
 	return l;
 }
 
 void RectangleSorter::BubbleSort(std::vector<RectangleDrawing*> rectangles)
 {
-	wxLogStatus("");
+	wxLogStatus(""); // clears the status bar
 	comparisons = 0;
 	arrayAccesses = 0;
 
@@ -155,7 +155,7 @@ void RectangleSorter::BubbleSort(std::vector<RectangleDrawing*> rectangles)
 	{
 		lastColor = rectangles[0]->color;
 		rectangles[0]->Recolor(wxBROWSER_COLOR);
-		wxYield();
+		wxYield(); // clears/updates the DC buffer, without this, changes in rectangle's color, height or position would not be visible
 		for (int j{ 0 }; j < rectangles.size() - i; ++j)
 		{
 			++comparisons;
@@ -166,19 +166,19 @@ void RectangleSorter::BubbleSort(std::vector<RectangleDrawing*> rectangles)
 				rectangles[j]->Redraw(rectangles[j + 1]->position, rectangles[j + 1]->size, rectangles[j + 1]->height, rectangles[j + 1]->color);
 				rectangles[j + 1]->Redraw(tempRect.position, tempRect.size, tempRect.height, wxBROWSER_COLOR);
 				arrayAccesses += 4;
-				wxYield();
+				wxYield(); // clears/updates the DC buffer, without this, changes in rectangle's color, height or position would not be visible
 			}
 			else
 			{
 				rectangles[j]->Recolor(lastColor);
 				lastColor = rectangles[j + 1]->color;
 				rectangles[j + 1]->Recolor(wxBROWSER_COLOR);
-				wxYield();
+				wxYield(); // clears/updates the DC buffer, without this, changes in rectangle's color, height or position would not be visible
 			}
 			wxMilliSleep(SORT_DELAY);
 		}
 		rectangles[rectangles.size() - i]->Recolor(lastColor);
-		wxYield();
+		wxYield(); // clears/updates the DC buffer, without this, changes in rectangle's color, height or position would not be visible
 	}
 
 	wxString comparisonsWXString = wxString::Format(wxT("%i"), comparisons);
@@ -189,7 +189,7 @@ void RectangleSorter::BubbleSort(std::vector<RectangleDrawing*> rectangles)
 
 void RectangleSorter::SelectionSort(std::vector<RectangleDrawing*> rectangles)
 {
-	wxLogStatus("");
+	wxLogStatus(""); // clears the status bar
 	comparisons = 0;
 	arrayAccesses = 0;
 
@@ -203,7 +203,7 @@ void RectangleSorter::SelectionSort(std::vector<RectangleDrawing*> rectangles)
 		smallest = i;
 		lastColor = rectangles[smallest]->color;
 		rectangles[smallest]->Recolor(wxBROWSER_COLOR);
-		wxYield();
+		wxYield(); // clears/updates the DC buffer, without this, changes in rectangle's color, height or position would not be visible
 
 		for (int j{ i + 1 }; j < rectangles.size(); ++j)
 		{
@@ -217,14 +217,14 @@ void RectangleSorter::SelectionSort(std::vector<RectangleDrawing*> rectangles)
 
 				lastColor = rectangles[smallest]->color;
 				rectangles[smallest]->Recolor(wxBROWSER_COLOR);
-				wxYield();
+				wxYield(); // clears/updates the DC buffer, without this, changes in rectangle's color, height or position would not be visible
 				wxMilliSleep(SORT_DELAY);
 			}
 			else
 			{
 				currentColor = rectangles[j]->color;
 				rectangles[j]->Recolor(wxBROWSER_COLOR);
-				wxYield();
+				wxYield(); // clears/updates the DC buffer, without this, changes in rectangle's color, height or position would not be visible
 				wxMilliSleep(SORT_DELAY);
 				rectangles[j]->Recolor(currentColor);
 			}
@@ -234,7 +234,7 @@ void RectangleSorter::SelectionSort(std::vector<RectangleDrawing*> rectangles)
 		rectangles[smallest]->Redraw(rectangles[i]->position, rectangles[i]->size, rectangles[i]->height,  rectangles[i]->color);
 		rectangles[i]->Redraw(rectTemp.position, rectTemp.size, rectTemp.height, lastColor);
 		arrayAccesses += 4;
-		wxYield();
+		wxYield(); // clears/updates the DC buffer, without this, changes in rectangle's color, height or position would not be visible
 	}
 
 	wxString comparisonsWXString = wxString::Format(wxT("%i"), comparisons);
@@ -245,7 +245,7 @@ void RectangleSorter::SelectionSort(std::vector<RectangleDrawing*> rectangles)
 
 void RectangleSorter::InsertionSort(std::vector<RectangleDrawing*> rectangles)
 {
-	wxLogStatus("");
+	wxLogStatus(""); // clears the status bar
 	comparisons = 0;
 	arrayAccesses = 0;
 
@@ -272,7 +272,7 @@ void RectangleSorter::InsertionSort(std::vector<RectangleDrawing*> rectangles)
 			rectangles[j - 1]->Recolor(wxBROWSER_COLOR);
 			++comparisons;
 			arrayAccesses += 2;
-			wxYield();
+			wxYield(); // clears/updates the DC buffer, without this, changes in rectangle's color, height or position would not be visible
 			--j;
 
 			wxMilliSleep(SORT_DELAY);
@@ -281,7 +281,7 @@ void RectangleSorter::InsertionSort(std::vector<RectangleDrawing*> rectangles)
 		rectangles[j]->height = key;
 		rectangles[j]->Redraw(rectTemp.position, rectTemp.size, rectTemp.height, rectTemp.color);
 		++arrayAccesses;
-		wxYield();
+		wxYield(); // clears/updates the DC buffer, without this, changes in rectangle's color, height or position would not be visible
 	}
 
 	wxString comparisonsWXString = wxString::Format(wxT("%i"), comparisons);
@@ -305,7 +305,7 @@ void RectangleSorter::MergeSortRecursive(std::vector<RectangleDrawing*> rectangl
 
 void RectangleSorter::MergeSortIterative(std::vector<RectangleDrawing*> rectangles)
 {
-	wxLogStatus("");
+	wxLogStatus(""); // clears the status bar
 	comparisons = 0;
 	arrayAccesses = 0;
 
@@ -341,7 +341,7 @@ void RectangleSorter::QuickSort(std::vector<RectangleDrawing*> rectangles, int s
 
 void RectangleSorter::PigeonholeSort(std::vector<RectangleDrawing*>& rectangles)
 {
-	wxLogStatus("");
+	wxLogStatus(""); // clears the status bar
 	comparisons = 0;
 	arrayAccesses = 0;
 
@@ -361,10 +361,10 @@ void RectangleSorter::PigeonholeSort(std::vector<RectangleDrawing*>& rectangles)
 
 		lastColor = rectangles[i]->color;
 		rectangles[i]->Recolor(wxBROWSER_COLOR);
-		wxYield();
+		wxYield(); // clears/updates the DC buffer, without this, changes in rectangle's color, height or position would not be visible
 		wxMilliSleep(SORT_DELAY);
 		rectangles[i]->Recolor(lastColor);
-		wxYield();
+		wxYield(); // clears/updates the DC buffer, without this, changes in rectangle's color, height or position would not be visible
 	}
 	int range = max - min + 1;
 

@@ -17,7 +17,7 @@ RectangleDrawing::RectangleDrawing(wxPanel* parent, wxPoint rectPosition, int re
 	SetMinSize(wxSize(MINIMUM_WIDTH, 0));
 }
 
-// Private methods
+// private methods
 void RectangleDrawing::PaintEvent(wxPaintEvent& evt)
 {
 	// depending on your system you may need to look at double-buffered 
@@ -48,7 +48,7 @@ void RectangleDrawing::HandleResizing(wxSizeEvent& evt)
 	Redraw(wxPoint(-1, viewPanelSize - heightAmountToDraw), wxSize(evt.GetSize().x, heightAmountToDraw), height, color);
 }
 
-// Public methods
+// public methods
 void RectangleDrawing::operator=(const RectangleDrawing& copy)
 {
 	clearFlag = copy.clearFlag;

@@ -3,8 +3,8 @@
 
 #include <vector>
 
-#define wxBROWSER_COLOR wxColour(100, 200, 255)
-#define SORT_DELAY 10
+#define wxBROWSER_COLOR wxColour(100, 200, 255) // blue-ish color of the "browser", which is usually the current rectangle accessed by the sorting algorithm
+#define SORT_DELAY 10 // in milliseconds
 
 class RectangleSorter
 {
